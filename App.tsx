@@ -3,6 +3,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import StartGameScreen from "./screens/StartGameScreen";
 import { useState } from "react";
 import GameScreen from "./screens/GameScreen";
+import Colors from "./contants/colors";
 
 export default function App() {
   const [userNumber, setUserNumber] = useState<string>("");
@@ -17,7 +18,10 @@ export default function App() {
     screen = <GameScreen />;
   }
   return (
-    <LinearGradient style={styles.rootScreen} colors={["#EEF0E5", "#B6C4B6"]}>
+    <LinearGradient
+      style={styles.rootScreen}
+      colors={[Colors.accent, Colors.tertiary]}
+    >
       <ImageBackground
         source={require("./assets/images/background.jpg")}
         resizeMode="cover"
