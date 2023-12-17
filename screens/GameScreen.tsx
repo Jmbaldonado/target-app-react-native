@@ -1,13 +1,14 @@
+import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useMemo, useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import { Alert, FlatList, StyleSheet, View } from "react-native";
+import GuessLogItem from "../components/game/GuessLogItem";
 import NumberContainer from "../components/game/NumberContainer";
 import Card from "../components/ui/Card";
 import InstructionText from "../components/ui/InstructionText";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import Title from "../components/ui/Title";
-import ButtonsContainer from "../components/ui/buttons/ButtonsContainer";
 import ButtonContainer from "../components/ui/buttons/ButtonContainer";
-import { Ionicons } from "@expo/vector-icons";
+import ButtonsContainer from "../components/ui/buttons/ButtonsContainer";
 import Colors from "../contants/colors";
 
 function generateRandomBetween(min: number, max: number, exclude: number) {
@@ -22,7 +23,7 @@ function generateRandomBetween(min: number, max: number, exclude: number) {
 
 interface GameScreenProps {
   userNumber: number;
-  onGameOver: () => void;
+  onGameOver: (numberOfRounds: number) => void;
 }
 
 let minBoundary = 1;
@@ -32,12 +33,18 @@ const GameScreen: React.FC<GameScreenProps> = ({ userNumber, onGameOver }) => {
     return generateRandomBetween(minBoundary, maxBoundary, userNumber);
   }, []);
   const [currentGuess, setCurrentGuess] = useState<number>(initialGuess);
+  const [guessRounds, setGuessRounds] = useState<number[]>([initialGuess]);
 
   useEffect(() => {
     if (currentGuess === userNumber) {
-      onGameOver();
+      onGameOver(guessRounds.length);
     }
   }, [currentGuess, userNumber, onGameOver]);
+
+  useEffect(() => {
+    minBoundary = 1;
+    maxBoundary = 100;
+  }, []);
 
   function nextGuessHandler(direction: "higher" | "lower") {
     if (
@@ -62,7 +69,10 @@ const GameScreen: React.FC<GameScreenProps> = ({ userNumber, onGameOver }) => {
     );
 
     setCurrentGuess(newRandomNumber);
+    setGuessRounds((prevGuessRounds) => [...prevGuessRounds, newRandomNumber]);
   }
+
+  const guessRoundsListLength = guessRounds.length;
 
   return (
     <View style={styles.screen}>
@@ -84,9 +94,19 @@ const GameScreen: React.FC<GameScreenProps> = ({ userNumber, onGameOver }) => {
             </PrimaryButton>
           </ButtonContainer>
         </ButtonsContainer>
-        {/* + - */}
       </Card>
-      {/* <View>Log Rounds</View> */}
+      <View style={styles.listContainer}>
+        <FlatList
+          data={guessRounds}
+          renderItem={(itemData) => (
+            <GuessLogItem
+              roundNumber={guessRoundsListLength - itemData.index}
+              guess={itemData.item}
+            />
+          )}
+          keyExtractor={(item) => item.toString()}
+        />
+      </View>
     </View>
   );
 };
@@ -100,5 +120,9 @@ const styles = StyleSheet.create({
   },
   instructionText: {
     marginBottom: 12,
+  },
+  listContainer: {
+    flex: 1,
+    padding: 16,
   },
 });

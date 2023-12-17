@@ -9,19 +9,19 @@ import ButtonsContainer from "../components/ui/buttons/ButtonsContainer";
 import ButtonContainer from "../components/ui/buttons/ButtonContainer";
 
 interface StartGameScreenProps {
-  onPickedNumber: (pickedNumber: string) => void;
+  onPickedNumber: (pickedNumber: number) => void;
 }
 const StartGameScreen: React.FC<StartGameScreenProps> = ({
   onPickedNumber,
 }) => {
-  const [enteredNumber, setEnteredNumber] = useState<string>("");
+  const [enteredNumber, setEnteredNumber] = useState<string | null>(null);
 
   function numberInputHandler(enteredText: string) {
     setEnteredNumber(enteredText);
   }
 
   function confirmInputHandler() {
-    const chosenNumber = parseInt(enteredNumber);
+    const chosenNumber = parseInt(enteredNumber!);
     if (isNaN(chosenNumber) || chosenNumber <= 0 || chosenNumber > 99) {
       Alert.alert(
         "Invalid number!",
@@ -37,7 +37,7 @@ const StartGameScreen: React.FC<StartGameScreenProps> = ({
       return;
     }
 
-    onPickedNumber(enteredNumber);
+    onPickedNumber(parseInt(enteredNumber!));
   }
 
   function resetInputHandler() {
@@ -54,7 +54,7 @@ const StartGameScreen: React.FC<StartGameScreenProps> = ({
           keyboardType="number-pad"
           autoCapitalize="none"
           autoCorrect={false}
-          value={enteredNumber}
+          value={enteredNumber!}
           onChangeText={numberInputHandler}
         />
         <ButtonsContainer>
