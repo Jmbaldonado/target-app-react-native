@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: Colors.white,
     textAlign: "center",
+    fontFamily: "poppins",
   },
   pressed: {
     opacity: 0.75,

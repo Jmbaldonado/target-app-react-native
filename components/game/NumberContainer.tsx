@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   },
   numberText: {
     color: Colors.primary,
+    fontFamily: "poppins-bold",
     fontSize: 36,
-    fontWeight: "bold",
   },
 });
